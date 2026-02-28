@@ -1,0 +1,14 @@
+[package]
+name = "palm-launcher"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tokio = { version = "1.49.0", features = ["rt-multi-thread", "rt", "macros"] }
+stardust-xr-asteroids.git = "https://github.com/StardustXR/asteroids"
+serde = { version = "1.0.228", features = ["derive"] }
+stardust-xr-fusion.git = "https://github.com/StardustXR/core"
+stardust-xr-gluon.git = "https://github.com/StardustXR/core"
+stardust-xr-molecules.git = "https://github.com/StardustXR/molecules"
+glam = { version = "0.32.0", features = ["mint", "serde"] }
+tokio-stream = "0.1.18"
