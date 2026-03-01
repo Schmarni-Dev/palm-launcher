@@ -1947,7 +1947,7 @@ checksum = "6ce2be8dc25455e1f91df71bfa12ad37d7af1092ae736f3a6cd0e37bc7810596"
 [[package]]
 name = "stardust-xr-asteroids"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/asteroids#cc2dc39687b94f450cf4ee460faa29c682b95241"
+source = "git+https://github.com/StardustXR/asteroids#c3008b3a9bc1e3d63735082431cb4dd87f260914"
 dependencies = [
  "bumpalo",
  "derive-where",
@@ -1974,7 +1974,7 @@ dependencies = [
 [[package]]
 name = "stardust-xr-fusion"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/core#dab3536d2c354bae85abf96496abb94ffa0e512d"
+source = "git+https://github.com/StardustXR/core#058d4c855a1cc3e809c0cb2723b59eeb2aaddc5c"
 dependencies = [
  "color-eyre",
  "convert_case",
@@ -2000,7 +2000,7 @@ dependencies = [
 [[package]]
 name = "stardust-xr-gluon"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/core#dab3536d2c354bae85abf96496abb94ffa0e512d"
+source = "git+https://github.com/StardustXR/core#058d4c855a1cc3e809c0cb2723b59eeb2aaddc5c"
 dependencies = [
  "futures",
  "nanoid",
@@ -2013,7 +2013,7 @@ dependencies = [
 [[package]]
 name = "stardust-xr-molecules"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/molecules#3d1898811aceb4b55ae7979932a7757e08589364"
+source = "git+https://github.com/StardustXR/molecules#d77dc87cb61dadf211e0e9ee40e08763bcf2de6b"
 dependencies = [
  "ashpd",
  "futures-util",
@@ -2031,7 +2031,7 @@ dependencies = [
 [[package]]
 name = "stardust-xr-protocol"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/core#dab3536d2c354bae85abf96496abb94ffa0e512d"
+source = "git+https://github.com/StardustXR/core#058d4c855a1cc3e809c0cb2723b59eeb2aaddc5c"
 dependencies = [
  "fnv",
  "kdl",
@@ -2041,7 +2041,7 @@ dependencies = [
 [[package]]
 name = "stardust-xr-wire"
 version = "0.50.0"
-source = "git+https://github.com/StardustXR/core#dab3536d2c354bae85abf96496abb94ffa0e512d"
+source = "git+https://github.com/StardustXR/core#058d4c855a1cc3e809c0cb2723b59eeb2aaddc5c"
 dependencies = [
  "dirs",
  "flatbuffers",

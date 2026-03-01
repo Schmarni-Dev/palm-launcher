@@ -24,7 +24,9 @@ use stardust_xr_fusion::{
     values::color::rgba_linear,
 };
 
-use crate::{spatial_ref::ExternalSpatialRef, spatial_ref_exposer::SpatialRefExposer};
+use crate::{
+    derezzer::Derezzer, spatial_ref::ExternalSpatialRef, spatial_ref_exposer::SpatialRefExposer,
+};
 
 #[tokio::main]
 async fn main() {
@@ -102,6 +104,14 @@ impl Reify for PalmLauncher {
                     })
                     .build(),
                 )
+                .maybe_child(matches!(self.state, Action::Destroy).then(|| {
+                    Derezzer::new(
+                        Vec3::ZERO,
+                        Quat::from_rotation_arc(Vec3::Y, self.pos.normalize()),
+                        self.pos.length(),
+                    )
+                    .build()
+                }))
                 .child(
                     Grabbable::new(
                         Shape::Cylinder(CylinderShape {
@@ -127,7 +137,7 @@ impl Reify for PalmLauncher {
                                     * Quat::from_rotation_z(FRAC_PI_2);
                                 let spatial = stardust_xr_fusion::spatial::Spatial::create(
                                     &spatial_ref,
-                                    Transform::from_translation_rotation(pos, quat),
+                                    Transform::from_translation_rotation(pos * 0.5, quat),
                                 )
                                 .unwrap();
                                 let token = root
