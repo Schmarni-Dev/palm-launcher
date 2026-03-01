@@ -1,11 +1,10 @@
-use std::sync::{Arc, Mutex};
-
 use glam::{Vec3, vec2};
-use stardust_xr_asteroids::{CustomElement, ValidState};
+use stardust_xr_asteroids::{Context, CustomElement, ValidState};
 use stardust_xr_fusion::{
     ClientHandle,
     fields::{FieldRef, FieldRefAspect},
     node::{NodeError, NodeType},
+    root::FrameInfo,
     spatial::{Spatial, SpatialAspect, SpatialRef, SpatialRefAspect, Transform},
     values::{Quaternion, Vector3},
 };
@@ -37,7 +36,7 @@ impl<State: ValidState> CustomElement<State> for Derezzer {
 
     fn create_inner(
         &self,
-        asteroids_context: &stardust_xr_asteroids::Context,
+        asteroids_context: &Context,
         info: stardust_xr_asteroids::CreateInnerInfo,
         _resource: &mut Self::Resource,
     ) -> Result<Self::Inner, Self::Error> {
@@ -67,8 +66,8 @@ impl<State: ValidState> CustomElement<State> for Derezzer {
     }
     fn frame(
         &self,
-        _context: &stardust_xr_asteroids::Context,
-        _info: &stardust_xr_fusion::root::FrameInfo,
+        _context: &Context,
+        _info: &FrameInfo,
         _state: &mut State,
         inner: &mut Self::Inner,
     ) {
@@ -86,7 +85,7 @@ impl<State: ValidState> CustomElement<State> for Derezzer {
                 for (derezzable, field, spatial) in derezzables {
                     if let Some(field) = field {
                         if field
-                            .ray_march(&ref_space_spatial, Vec3::ZERO, Vec3::NEG_Z)
+                            .ray_march(&ref_space_spatial, Vec3::ZERO, Vec3::Y)
                             .await
                             .is_ok_and(|v| {
                                 v.min_distance <= 0.001 && v.deepest_point_distance <= distance
