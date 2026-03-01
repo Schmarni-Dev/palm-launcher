@@ -160,6 +160,7 @@ impl Reify for PalmLauncher {
                         }
                         state.pos = Vec3::ZERO;
                         state.rot = Quat::IDENTITY;
+                        state.state = Action::Nothing;
                     })
                     .build()
                     .child(
