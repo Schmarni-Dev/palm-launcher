@@ -47,6 +47,7 @@ struct PalmLauncher {
     #[serde(skip)]
     handle_ref: Option<SpatialRef>,
     commands: Vec<String>,
+    visible: bool,
 }
 impl Reify for PalmLauncher {
     fn reify(&self) -> impl stardust_xr_asteroids::Element<Self> {
@@ -55,8 +56,11 @@ impl Reify for PalmLauncher {
             "/org/stardustxr/Hand/left/palm",
             Some("/org/stardustxr/Hand/left"),
         )
+        .tracked_changed(|state: &mut PalmLauncher, tracked| {
+            state.visible = tracked;
+        })
         .build()
-        .child(
+        .maybe_child(self.visible.then(|| {
             Spatial::default()
                 .pos(vec3(0.0, -0.02, 0.0))
                 .rot(Quat::from_rotation_x(FRAC_PI_2) * Quat::from_rotation_z(FRAC_PI_2))
@@ -181,8 +185,8 @@ impl Reify for PalmLauncher {
                         }])
                         .build(),
                     ),
-                ),
-        )
+                )
+        }))
     }
 }
 impl ClientState for PalmLauncher {
