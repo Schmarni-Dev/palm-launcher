@@ -11,9 +11,7 @@ use std::{
 use glam::{Quat, Vec3, vec3};
 use serde::{Deserialize, Serialize};
 use stardust_xr_asteroids::{
-    ClientState, CustomElement, Migrate, Reify, Transformable,
-    client::run,
-    elements::{Grabbable, Lines, Spatial, Text},
+    ClientState, Context, CustomElement, Migrate, Reify, Tasker, Transformable, client::run, elements::{Grabbable, Lines, Spatial, Text}
 };
 use stardust_xr_fusion::{
     drawable::{Line, LinePoint},
@@ -50,7 +48,11 @@ struct PalmLauncher {
     visible: bool,
 }
 impl Reify for PalmLauncher {
-    fn reify(&self) -> impl stardust_xr_asteroids::Element<Self> {
+    fn reify(
+        &self,
+        _context: &Context,
+        _tasks: impl Tasker<Self>,
+    ) -> impl stardust_xr_asteroids::Element<Self> {
         ExternalSpatialRef::new(
             "org.stardustxr.Hands",
             "/org/stardustxr/Hand/left/palm",

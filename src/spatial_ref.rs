@@ -1,6 +1,5 @@
 use std::fmt::Debug;
 
-use glam::Vec3;
 use stardust_xr_asteroids::{CustomElement, FnWrapper, ValidState};
 use stardust_xr_fusion::{
     node::{NodeError, NodeType},
