@@ -11,7 +11,9 @@ use std::{
 use glam::{Quat, Vec3, vec3};
 use serde::{Deserialize, Serialize};
 use stardust_xr_asteroids::{
-    ClientState, Context, CustomElement, Migrate, Reify, Tasker, Transformable, client::run, elements::{Grabbable, Lines, Spatial, Text}
+    ClientState, Context, CustomElement, Migrate, Reify, Tasker, Transformable,
+    client::run,
+    elements::{Grabbable, Lines, Spatial, Text},
 };
 use stardust_xr_fusion::{
     drawable::{Line, LinePoint},
@@ -50,7 +52,7 @@ struct PalmLauncher {
 impl Reify for PalmLauncher {
     fn reify(
         &self,
-        _context: &Context,
+        context: &Context,
         _tasks: impl Tasker<Self>,
     ) -> impl stardust_xr_asteroids::Element<Self> {
         ExternalSpatialRef::new(
@@ -60,6 +62,9 @@ impl Reify for PalmLauncher {
         )
         .tracked_changed(|state: &mut PalmLauncher, tracked| {
             state.visible = tracked;
+            state.pos = Vec3::ZERO;
+            state.rot = Quat::IDENTITY;
+            state.state = Action::Nothing;
         })
         .build()
         .maybe_child(self.visible.then(|| {
@@ -71,8 +76,12 @@ impl Reify for PalmLauncher {
                     Lines::new(vec![Line {
                         points: {
                             let color = match &self.state {
-                                Action::Nothing => rgba_linear!(0.1, 0.1, 0.1, 1.0),
-                                Action::Command(_) => rgba_linear!(1., 1., 1., 1.),
+                                Action::Nothing => {
+                                    context.accent_color.color() * rgba_linear!(0.1, 0.1, 0.1, 1.0)
+                                }
+                                Action::Command(_) => {
+                                    context.accent_color.color() * rgba_linear!(0.8, 0.8, 0.8, 1.0)
+                                }
                                 Action::Destroy => rgba_linear!(1., 0., 0., 1.),
                             };
                             vec![
