@@ -11,12 +11,13 @@ use stardust_xr_molecules::tracked::TrackedProxy;
 use tokio::sync::mpsc;
 use tokio_stream::StreamExt as _;
 
+#[allow(clippy::type_complexity)]
 #[derive(Debug)]
 pub struct ExternalSpatialRef<State: ValidState + Debug> {
     well_known_name: String,
     spatial_path: String,
     tracked_path: Option<String>,
-    tracked_changed: Option<FnWrapper<dyn Fn(&mut State, bool) + Send + Sync + 'static>>,
+    tracked_changed: FnWrapper<dyn Fn(&mut State, bool) + Send + Sync + 'static>,
 }
 impl<State: ValidState + Debug> ExternalSpatialRef<State> {
     pub fn new(well_known_name: &str, spatial_path: &str, tracked_path: Option<&str>) -> Self {
@@ -24,14 +25,14 @@ impl<State: ValidState + Debug> ExternalSpatialRef<State> {
             well_known_name: well_known_name.to_string(),
             spatial_path: spatial_path.to_string(),
             tracked_path: tracked_path.map(|v| v.to_string()),
-            tracked_changed: None,
+            tracked_changed: FnWrapper(Box::new(|_, _| {})),
         }
     }
     pub fn tracked_changed(
         mut self,
         func: impl Fn(&mut State, bool) + Send + Sync + 'static,
     ) -> Self {
-        self.tracked_changed.replace(FnWrapper(Box::new(func)));
+        self.tracked_changed = FnWrapper(Box::new(func));
         self
     }
 }
@@ -75,10 +76,10 @@ impl<State: ValidState + Debug> CustomElement<State> for ExternalSpatialRef<Stat
                 if let Some(path) = tracked_path
                     && let Ok(proxy) = TrackedProxy::new(&conn, name, path).await
                 {
-                    _ = tx.send(proxy.is_tracked().await.unwrap_or(true)).unwrap();
+                    tx.send(proxy.is_tracked().await.unwrap_or(true)).unwrap();
                     let mut stream = proxy.receive_is_tracked_changed().await;
                     while let Some(tracked) = stream.next().await {
-                        _ = tx.send(tracked.get().await.unwrap_or(true)).unwrap();
+                        tx.send(tracked.get().await.unwrap_or(true)).unwrap();
                     }
                 }
             }
@@ -99,10 +100,8 @@ impl<State: ValidState + Debug> CustomElement<State> for ExternalSpatialRef<Stat
         state: &mut State,
         inner: &mut Self::Inner,
     ) {
-        if let Some(func) = self.tracked_changed.as_ref() {
-            while let Ok(tracked) = inner.tracked_changed_recv.try_recv() {
-                func.0(state, tracked);
-            }
+        while let Ok(tracked) = inner.tracked_changed_recv.try_recv() {
+            self.tracked_changed.0(state, tracked);
         }
     }
 

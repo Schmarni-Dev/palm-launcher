@@ -237,10 +237,11 @@ impl Reify for PalmLauncher {
                                         )
                                         .await
                                         .unwrap();
+                                    #[allow(clippy::zombie_processes)]
                                     Command::new("sh")
                                         .arg("-c")
                                         .env("STARDUST_STARTUP_TOKEN", token)
-                                        .arg(format!("{cmd} &"))
+                                        .arg(format!("{cmd} & disown"))
                                         .stdin(Stdio::null())
                                         .stdout(Stdio::null())
                                         .stderr(Stdio::null())
@@ -279,7 +280,7 @@ impl ClientState for PalmLauncher {
     const APP_ID: &'static str = "dev.schmarni.palmlauncher";
 
     fn initial_state_update(&mut self) {
-        let mut args = env::args().into_iter().skip(1);
+        let mut args = env::args().skip(1);
         let target = Target::from_str(
             &args
                 .next()

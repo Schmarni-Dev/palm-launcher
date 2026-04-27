@@ -6,6 +6,7 @@ use stardust_xr_fusion::{
     spatial::{Spatial, SpatialRef, Transform},
 };
 
+#[allow(clippy::type_complexity)]
 #[derive(Debug)]
 pub struct SpatialRefExposer<State: ValidState + Debug>(
     FnWrapper<dyn Fn(&mut State, SpatialRef) + Send + Sync>,
